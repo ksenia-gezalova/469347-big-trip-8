@@ -1,7 +1,7 @@
 # Личный проект «Большое путешествие» [![Build status][travis-image]][travis-url]
 
 * Студент: [Ksenia Gezalova](https://up.htmlacademy.ru/ecmascript/8/user/469347).
-* Наставник: `Неизвестно`.
+* Наставник: `Всеволод Артемьев`.
 
 ---
 
