@@ -1,4 +1,4 @@
-const getPoint = (point) => {
+export const getPoint = (point) => {
   return `<article class="trip-point">
   <i class="trip-icon">🚕</i>
   <h3 class="trip-point__title">${point.title}</h3>
@@ -17,5 +17,3 @@ const getPoint = (point) => {
   </ul>
 </article>`;
 };
-
-export default getPoint;

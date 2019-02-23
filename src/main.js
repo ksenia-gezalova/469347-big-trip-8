@@ -1,5 +1,5 @@
-import getFilter from "./make-filter";
-import getPoint from "./make-point";
+import {getFilter} from "./make-filter";
+import {getPoint} from "./make-point";
 
 const filtersContainer = document.querySelector(`.trip-filter`);
 const pointsContainer = document.querySelector(`.trip-day__items`);
@@ -84,8 +84,8 @@ const points = [
 ];
 
 // render items
-const renderItems = (dist, arr, func) => {
-  const items = arr.map(func).join(``);
+const renderItems = (dist, elements, func) => {
+  const items = elements.map(func).join(``);
   dist.insertAdjacentHTML(`beforeend`, items);
 };
 
