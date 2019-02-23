@@ -102,7 +102,7 @@ const getRandomValue = (min, max) => {
   return Math.floor(random);
 };
 
-// render filters and cards
+// render filters and points
 renderItems(filtersContainer, filters, getFilter);
 renderItems(pointsContainer, points, getPoint);
 
