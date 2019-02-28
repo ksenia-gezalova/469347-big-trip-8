@@ -20,6 +20,27 @@ const filters = [
 const points = [
   {
     title: `Flight to Geneva`,
+    type: {
+      taxi: `🚕`,
+      bus: `🚌`,
+      train: `🚂`,
+      ship: `🛳️`,
+      transport: `🚊`,
+      drive: `🚗`,
+      flight: `✈️`,
+      checkIn: `🏨`,
+      sightseeing: `🏛️`,
+      restaurant: `🍴`,
+    },
+    places: [
+      `Oslo`,
+      `Maldives`,
+      `New Zeland`,
+      `Goa`,
+      `Antigua and Barbuda`,
+      `Tortuga`,
+      `Moscow`
+    ],
     date: {
       start: `10:30`,
       end: `12:45`
