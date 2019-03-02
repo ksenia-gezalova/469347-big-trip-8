@@ -1,6 +1,10 @@
 import {getFilter} from "./make-filter";
 import {getPoint} from "./make-point";
 
+const POINTS_AMOUNT = 7;
+const MS_IN_DAY = 24 * 60 * 60 * 1000;
+const TEXT = `Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras aliquet varius magna, non porta ligula feugiat eget. Fusce tristique felis at fermentum pharetra. Aliquam id orci ut lectus varius viverra. Nullam nunc ex, convallis sed finibus eget, sollicitudin eget ante. Phasellus eros mauris, condimentum sed nibh vitae, sodales efficitur ipsum. Sed blandit, eros vel aliquam faucibus, purus ex euismod diam, eu luctus nunc ante ut dui. Sed sed nisi sed augue convallis suscipit in sed felis. Aliquam erat volutpat. Nunc fermentum tortor ac porta dapibus. In rutrum ac purus sit amet tempus`;
+
 const filtersContainer = document.querySelector(`.trip-filter`);
 const pointsContainer = document.querySelector(`.trip-day__items`);
 
@@ -17,71 +21,52 @@ const filters = [
   }
 ];
 
-const points = [
+const point =
   {
     title: `Flight to Geneva`,
-    date: {
-      start: `10:30`,
-      end: `12:45`
+    type: {
+      taxi: `🚕`,
+      bus: `🚌`,
+      train: `🚂`,
+      ship: `🛳️`,
+      transport: `🚊`,
+      drive: `🚗`,
+      flight: `✈️`,
+      checkIn: `🏨`,
+      sightseeing: `🏛️`,
+      restaurant: `🍴`,
     },
-    duration: `2H 30M`,
-    price: `45`
-  },
-  {
-    title: `Flight to Geneva`,
+    places: [
+      `Oslo`,
+      `Maldives`,
+      `New Zeland`,
+      `Goa`,
+      `Antigua and Barbuda`,
+      `Tortuga`,
+      `Moscow`
+    ],
+    offers: [
+      `Add luggage`,
+      `Switch to comfort class`,
+      `Add meal`,
+      `Choose seats`
+    ],
+    pictureURL: `http://picsum.photos/300/150?r=${Math.random()}`,
     date: {
-      start: `10:30`,
-      end: `12:45`
+      start: Date.now(),
+      end: Date.now() + 1 + Math.floor(Math.random() * 7) * MS_IN_DAY
     },
-    duration: `2H 30M`,
-    price: `45`
-  },
-  {
-    title: `Flight to Geneva`,
-    date: {
-      start: `10:30`,
-      end: `12:45`
-    },
-    duration: `2H 30M`,
-    price: `45`
-  },
-  {
-    title: `Flight to Geneva`,
-    date: {
-      start: `10:30`,
-      end: `12:45`
-    },
-    duration: `2H 30M`,
-    price: `45`
-  },
-  {
-    title: `Flight to Geneva`,
-    date: {
-      start: `10:30`,
-      end: `12:45`
-    },
-    duration: `2H 30M`,
-    price: `45`
-  },
-  {
-    title: `Flight to Geneva`,
-    date: {
-      start: `10:30`,
-      end: `12:45`
-    },
-    duration: `2H 30M`,
-    price: `45`
-  },
-  {
-    title: `Flight to Geneva`,
-    date: {
-      start: `10:30`,
-      end: `12:45`
-    },
-    duration: `2H 30M`,
-    price: `45`
-  }
-];
+    duration: Date.now(),
+    price: 10 + Math.floor(Math.random() * 100),
+    description: TEXT.split(`.`).splice(1, Math.floor(Math.random() * 3))
+  };
+
+// create list of items
+const createItems = (item, amount) => {
+  return new Array(amount).fill(item);
+};
+
+const points = createItems(point, POINTS_AMOUNT);
 
 // render items
 const renderItems = (dist, elements, func) => {
