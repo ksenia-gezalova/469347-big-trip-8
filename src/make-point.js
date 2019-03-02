@@ -5,10 +5,11 @@ const getFormattedDate = (milliseconds) => {
 
 const getFormattedTime = (milliseconds) => `${(new Date(milliseconds)).toLocaleString(`en-US`, {hour12: true, hour: `2-digit`, minute: `2-digit`})}`;
 
-const getOffers = (offer) => {
-  return `<li>
-  <button class="trip-point__offer">${offer} +&euro;&nbsp;20</button>
-</li>`;
+const getOffer = (offer) => {
+  return `
+    <li>
+      <button class="trip-point__offer">${offer} +&euro;&nbsp;20</button>
+    </li>`;
 };
 
 export const getPoint = (point) => {
@@ -21,7 +22,7 @@ export const getPoint = (point) => {
   </p>
   <p class="trip-point__price">&euro;&nbsp;${point.price}</p>
   <ul class="trip-point__offers">
-  ${point.offers.map(getOffers).join(``)}
+  ${point.offers.map(getOffer).join(``)}
   </ul>
 </article>`;
 };
