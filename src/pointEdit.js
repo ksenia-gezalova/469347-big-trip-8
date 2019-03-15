@@ -157,11 +157,11 @@ export class PointEdit {
             </section>
           </form>
         </article>
-    `;
+    `.trim();
   }
 
   bind() {
-    this._element.querySelector(`.point__button--save`).addEventListener(`click`, this._onSubmitClick.bind(this));
+    this._element.querySelector(`.point__button--save`).addEventListener(`click`, this._onSubmitClick);
   }
 
   render() {

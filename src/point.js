@@ -58,11 +58,11 @@ export class Point {
                 <ul class="trip-point__offers">
                 ${this._offers.map(getOffer).join(``)}
                 </ul>
-            </article>`;
+            </article>`.trim();
   }
 
   bind() {
-    this._element.querySelector(`.trip-icon`).addEventListener(`click`, this._onEditButtonClick.bind(this));
+    this._element.querySelector(`.trip-icon`).addEventListener(`click`, this._onEditButtonClick);
   }
 
   render() {

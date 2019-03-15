@@ -76,9 +76,8 @@ pointComponent.onEdit = () => {
   pointComponent.unrender();
 };
 
-/* pointEditComponent.onSubmit = () => {
+pointEditComponent.onSubmit = () => {
   pointComponent.render();
   pointsContainer.replaceChild(pointComponent.element, pointEditComponent.element);
   pointEditComponent.unrender();
 };
- */
