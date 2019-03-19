@@ -1,6 +1,6 @@
 import {
-  createElement
-} from './create-element';
+  Component
+} from './component';
 
 const getFormattedDate = (milliseconds) => {
   const date = new Date(milliseconds);
@@ -16,8 +16,9 @@ const getOffer = (offer) => {
     </li>`;
 };
 
-export class Point {
+export class Point extends Component {
   constructor(data) {
+    super();
     this._title = data.title;
     this._dateStart = data.date.start;
     this._dateEnd = data.date.end;
@@ -26,18 +27,12 @@ export class Point {
     this._price = data.price;
     this._offers = data.offers;
 
-    this._element = null;
-
     this._onEdit = null;
     this._onEditButtonClick = this._onEditButtonClick.bind(this);
   }
 
   set onEdit(fn) {
     this._onEdit = fn;
-  }
-
-  get element() {
-    return this._element;
   }
 
   _onEditButtonClick() {
@@ -65,19 +60,8 @@ export class Point {
     this._element.querySelector(`.trip-icon`).addEventListener(`click`, this._onEditButtonClick);
   }
 
-  render() {
-    this._element = createElement(this.template);
-    this.bind();
-    return this._element;
-  }
-
   unbind() {
     this._element.querySelector(`.trip-icon`)
       .removeEventListener(`click`, this._onEditButtonClick);
-  }
-
-  unrender() {
-    this.unbind();
-    this._element = null;
   }
 }

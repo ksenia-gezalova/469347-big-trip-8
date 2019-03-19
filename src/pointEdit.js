@@ -1,9 +1,10 @@
 import {
-  createElement
-} from './create-element';
+  Component
+} from './component';
 
-export class PointEdit {
+export class PointEdit extends Component {
   constructor(data) {
+    super();
     this._title = data.title;
     this._dateStart = data.date.start;
     this._dateEnd = data.date.end;
@@ -11,8 +12,6 @@ export class PointEdit {
     this._duration = data.duration;
     this._price = data.price;
     this._offers = data.offers;
-
-    this._element = null;
 
     this._onSubmit = null;
     this._onReset = null;
@@ -36,10 +35,6 @@ export class PointEdit {
   _onResetClick() {
     // eslint-disable-next-line no-unused-expressions
     typeof this._onReset === `function` && this._onReset();
-  }
-
-  get element() {
-    return this._element;
   }
 
   get template() {
@@ -164,18 +159,7 @@ export class PointEdit {
     this._element.querySelector(`.point__button--save`).addEventListener(`click`, this._onSubmitClick);
   }
 
-  render() {
-    this._element = createElement(this.template);
-    this.bind();
-    return this._element;
-  }
-
   unbind() {
     this._element.querySelector(`.point__button--save`).removeEventListener(`click`, this._onSubmitClick);
-  }
-
-  unrender() {
-    this.unbind();
-    this._element = null;
   }
 }
