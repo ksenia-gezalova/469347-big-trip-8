@@ -25,7 +25,7 @@ export class PointEdit extends Component {
 
   _processForm(formData) {
     const entry = {
-      price: 0
+      price: ``
     };
 
     const pointEditMapper = PointEdit.createMapper(entry);
@@ -183,12 +183,12 @@ export class PointEdit extends Component {
 
   bind() {
     this._element.querySelector(`.point__form`)
-      .addEventListener(`submit`, this._onSubmitButtonClick);
+      .addEventListener(`submit`, this._onSubmitClick);
   }
 
   unbind() {
     this._element.querySelector(`.point__form`)
-      .removeEventListener(`submit`, this._onSubmitButtonClick);
+      .removeEventListener(`submit`, this._onSubmitClick);
   }
 
   update(data) {
