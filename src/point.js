@@ -33,7 +33,6 @@ export class Point extends Component {
   _onEditButtonClick() {
     // eslint-disable-next-line no-unused-expressions
     typeof this._onEdit === `function` && this._onEdit();
-
   }
 
   get template() {

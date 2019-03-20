@@ -2,7 +2,7 @@ import {
   Component
 } from './component';
 
-import flatpickr from 'flatpickr';
+// import flatpickr from 'flatpickr';
 
 export class PointEdit extends Component {
   constructor(data) {
@@ -25,7 +25,7 @@ export class PointEdit extends Component {
 
   _processForm(formData) {
     const entry = {
-      price: ``
+      price: 0
     };
 
     const pointEditMapper = PointEdit.createMapper(entry);
@@ -54,8 +54,7 @@ export class PointEdit extends Component {
     const formData = new FormData(this._element.querySelector(`.point__form`));
     const newData = this._processForm(formData);
     // eslint-disable-next-line no-unused-expressions
-    typeof this._onSubmit === `function` && this._onSubmit();
-
+    typeof this._onSubmit === `function` && this._onSubmit(newData);
     this.update(newData);
   }
 
@@ -67,7 +66,7 @@ export class PointEdit extends Component {
   get template() {
     return `
         <article class="point">
-          <form action="" method="get" class="point__form">
+          <form method="get" class="point__form">
             <header class="point__header">
               <label class="point__date">
                 choose day
@@ -183,11 +182,13 @@ export class PointEdit extends Component {
   }
 
   bind() {
-    this._element.querySelector(`.point__button--save`).addEventListener(`click`, this._onSubmitClick);
+    this._element.querySelector(`.point__form`)
+      .addEventListener(`submit`, this._onSubmitButtonClick);
   }
 
   unbind() {
-    this._element.querySelector(`.point__button--save`).removeEventListener(`click`, this._onSubmitClick);
+    this._element.querySelector(`.point__form`)
+      .removeEventListener(`submit`, this._onSubmitButtonClick);
   }
 
   update(data) {

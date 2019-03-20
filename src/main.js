@@ -79,7 +79,7 @@ pointComponent.onEdit = () => {
 pointEditComponent.onSubmit = (newObject) => {
   point.price = newObject.price;
 
-  pointComponent.update();
+  pointComponent.update(point);
   pointComponent.render();
   pointsContainer.replaceChild(pointComponent.element, pointEditComponent.element);
   pointEditComponent.unrender();
