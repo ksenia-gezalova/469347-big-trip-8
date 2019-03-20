@@ -2,12 +2,7 @@ import {
   Component
 } from './component';
 
-const getFormattedDate = (milliseconds) => {
-  const date = new Date(milliseconds);
-  return `${date.toLocaleString(`en-US`, {day: `2-digit`})} ${date.toLocaleString(`en-US`, {month: `long`})}`;
-};
-
-const getFormattedTime = (milliseconds) => `${(new Date(milliseconds)).toLocaleString(`en-US`, {hour12: true, hour: `2-digit`, minute: `2-digit`})}`;
+import moment from 'moment';
 
 const getOffer = (offer) => {
   return `
@@ -46,8 +41,8 @@ export class Point extends Component {
                 <i class="trip-icon">${this._type}</i>
                 <h3 class="trip-point__title">${this._title}</h3>
                 <p class="trip-point__schedule">
-                  <span class="trip-point__timetable">${getFormattedTime(this._dateStart)}&nbsp;&mdash; ${getFormattedTime(this._dateEnd)}</span>
-                  <span class="trip-point__duration">${getFormattedDate(this._duration)}</span>
+                  <span class="trip-point__timetable">${moment(this._dateStart).format(`LT`)}&nbsp;&mdash; ${moment(this._dateEnd).format(`LT`)}</span>
+                  <span class="trip-point__duration">${moment(this._duration).format(`DD MMMM`)}</span>
                 </p>
                 <p class="trip-point__price">&euro;&nbsp;${this._price}</p>
                 <ul class="trip-point__offers">
@@ -63,5 +58,14 @@ export class Point extends Component {
   unbind() {
     this._element.querySelector(`.trip-icon`)
       .removeEventListener(`click`, this._onEditButtonClick);
+  }
+
+  update(data) {
+    /* this._title = data.title;
+    this._type = data.type;
+    this._dateStart = data.dateStart;
+    this._dateEnd = data.dateEnd;
+    this._duration = data.duration; */
+    this._price = data.price;
   }
 }

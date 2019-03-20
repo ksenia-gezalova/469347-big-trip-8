@@ -8,6 +8,7 @@ export class Component {
       throw new Error(`Can't instantiate Component, only concrete one.`);
     }
     this._element = null;
+    this._state = {};
   }
 
   get element() {
@@ -32,4 +33,6 @@ export class Component {
     this.unbind();
     this._element = null;
   }
+
+  update() {}
 }
