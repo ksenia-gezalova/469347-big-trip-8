@@ -1,7 +1,8 @@
 import {
   Component
-} from './component';
+} from "./component";
 
+// import moment from 'moment';
 // import flatpickr from 'flatpickr';
 
 export class PointEdit extends Component {
@@ -25,7 +26,8 @@ export class PointEdit extends Component {
 
   _processForm(formData) {
     const entry = {
-      price: ``
+      price: ``,
+      title: ``
     };
 
     const pointEditMapper = PointEdit.createMapper(entry);
@@ -105,7 +107,7 @@ export class PointEdit extends Component {
 
               <div class="point__destination-wrap">
                 <label class="point__destination-label" for="destination">Flight to</label>
-                <input class="point__destination-input" list="destination-select" id="destination" value="Chamonix" name="destination">
+                <input class="point__destination-input" list="destination-select" id="destination" value="${this._title}" name="destination">
                 <datalist id="destination-select">
                   <option value="airport"></option>
                   <option value="Geneva"></option>
@@ -122,7 +124,9 @@ export class PointEdit extends Component {
               <label class="point__price">
                 write price
                 <span class="point__price-currency">€</span>
-                <input class="point__input" type="text" value="${this._price}" name="price">
+                <input class="point__input" type="text" value="${
+  this._price
+}" name="price">
               </label>
 
               <div class="point__buttons">
@@ -182,27 +186,29 @@ export class PointEdit extends Component {
   }
 
   bind() {
-    this._element.querySelector(`.point__form`)
+    this._element
+      .querySelector(`.point__form`)
       .addEventListener(`submit`, this._onSubmitClick);
   }
 
   unbind() {
-    this._element.querySelector(`.point__form`)
+    this._element
+      .querySelector(`.point__form`)
       .removeEventListener(`submit`, this._onSubmitClick);
   }
 
   update(data) {
-    /* this._title = data.title;
+    this._title = data.title;
     this._type = data.type;
     this._dateStart = data.dateStart;
     this._dateEnd = data.dateEnd;
-    this._duration = data.duration; */
+    this._duration = data.duration;
     this._price = data.price;
   }
 
   static createMapper(target) {
     return {
-      price: (value) => target.price[value]
+      'price': (value) => (target.price = value)
     };
   }
 }
