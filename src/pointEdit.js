@@ -1,6 +1,9 @@
 import {
   Component
-} from './component';
+} from "./component";
+
+// import moment from 'moment';
+// import flatpickr from 'flatpickr';
 
 export class PointEdit extends Component {
   constructor(data) {
@@ -8,15 +11,34 @@ export class PointEdit extends Component {
     this._title = data.title;
     this._dateStart = data.date.start;
     this._dateEnd = data.date.end;
-    this._type = data.type.train;
+    this._type = data.type;
     this._duration = data.duration;
     this._price = data.price;
     this._offers = data.offers;
 
+    this._state.isDate = false;
     this._onSubmit = null;
     this._onReset = null;
     this._onSubmitClick = this._onSubmitClick.bind(this);
     this._onResetClick = this._onResetClick.bind(this);
+    this._onChangeDate = this._onChangeDate.bind(this);
+  }
+
+  _processForm(formData) {
+    const entry = {
+      price: ``,
+      title: ``
+    };
+
+    const pointEditMapper = PointEdit.createMapper(entry);
+
+    for (const pair of formData.entries()) {
+      const [property, value] = pair;
+      // eslint-disable-next-line no-unused-expressions
+      pointEditMapper[property] && pointEditMapper[property](value);
+    }
+
+    return entry;
   }
 
   set onSubmit(fn) {
@@ -27,9 +49,15 @@ export class PointEdit extends Component {
     this._onReset = fn;
   }
 
-  _onSubmitClick() {
+  _onChangeDate() {}
+
+  _onSubmitClick(evt) {
+    evt.preventDefault();
+    const formData = new FormData(this._element.querySelector(`.point__form`));
+    const newData = this._processForm(formData);
     // eslint-disable-next-line no-unused-expressions
-    typeof this._onSubmit === `function` && this._onSubmit();
+    typeof this._onSubmit === `function` && this._onSubmit(newData);
+    this.update(newData);
   }
 
   _onResetClick() {
@@ -40,7 +68,7 @@ export class PointEdit extends Component {
   get template() {
     return `
         <article class="point">
-          <form action="" method="get">
+          <form method="get" class="point__form">
             <header class="point__header">
               <label class="point__date">
                 choose day
@@ -79,7 +107,7 @@ export class PointEdit extends Component {
 
               <div class="point__destination-wrap">
                 <label class="point__destination-label" for="destination">Flight to</label>
-                <input class="point__destination-input" list="destination-select" id="destination" value="Chamonix" name="destination">
+                <input class="point__destination-input" list="destination-select" id="destination" value="${this._title}" name="destination">
                 <datalist id="destination-select">
                   <option value="airport"></option>
                   <option value="Geneva"></option>
@@ -96,7 +124,9 @@ export class PointEdit extends Component {
               <label class="point__price">
                 write price
                 <span class="point__price-currency">€</span>
-                <input class="point__input" type="text" value="160" name="price">
+                <input class="point__input" type="text" value="${
+  this._price
+}" name="price">
               </label>
 
               <div class="point__buttons">
@@ -156,10 +186,29 @@ export class PointEdit extends Component {
   }
 
   bind() {
-    this._element.querySelector(`.point__button--save`).addEventListener(`click`, this._onSubmitClick);
+    this._element
+      .querySelector(`.point__form`)
+      .addEventListener(`submit`, this._onSubmitClick);
   }
 
   unbind() {
-    this._element.querySelector(`.point__button--save`).removeEventListener(`click`, this._onSubmitClick);
+    this._element
+      .querySelector(`.point__form`)
+      .removeEventListener(`submit`, this._onSubmitClick);
+  }
+
+  update(data) {
+    this._title = data.title;
+    this._type = data.type;
+    this._dateStart = data.dateStart;
+    this._dateEnd = data.dateEnd;
+    this._duration = data.duration;
+    this._price = data.price;
+  }
+
+  static createMapper(target) {
+    return {
+      'price': (value) => (target.price = value)
+    };
   }
 }
