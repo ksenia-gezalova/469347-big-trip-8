@@ -1,8 +1,8 @@
 import {
-  getFilter
-} from "./make-filter";
-import {
   point
+} from './data';
+import {
+  filters
 } from './data';
 import {
   Point
@@ -10,56 +10,15 @@ import {
 import {
   PointEdit
 } from './pointEdit';
-
-// const POINTS_AMOUNT = 7;
+import {
+  Filter
+} from "./filter";
 
 
 const filtersContainer = document.querySelector(`.trip-filter`);
 const pointsContainer = document.querySelector(`.trip-day__items`);
 const pointComponent = new Point(point);
 const pointEditComponent = new PointEdit(point);
-
-const filters = [{
-  caption: `Everything`,
-  isChecked: true
-},
-{
-  caption: `Future`
-},
-{
-  caption: `Past`
-}
-];
-
-// create list of items
-/* const createItems = (item, amount) => {
-  return new Array(amount).fill(item);
-}; */
-
-/* const points = createItems(point, POINTS_AMOUNT); */
-
-// render items
-const renderItems = (dist, elements, func) => {
-  const items = elements.map(func).join(``);
-  dist.insertAdjacentHTML(`beforeend`, items);
-};
-
-// remove items
-/* const removeItems = (dist) => {
-  while (dist.firstChild) {
-    dist.removeChild(dist.firstChild);
-  }
-}; */
-
-// MathRandom
-/* const getRandomValue = (min, max) => {
-  const random = min + Math.random() * (max - min);
-  return Math.floor(random);
-}; */
-
-// render filters and points
-renderItems(filtersContainer, filters, getFilter);
-
 // listener for filters
 /* filtersContainer.addEventListener(`change`, (evt) => {
   if (evt.target.name === `filter`) {
@@ -69,6 +28,7 @@ renderItems(filtersContainer, filters, getFilter);
 }); */
 
 pointsContainer.appendChild(pointComponent.render());
+// filtersContainer.appendChild(filterComponent.render());
 
 pointComponent.onEdit = () => {
   pointEditComponent.render();
@@ -84,3 +44,19 @@ pointEditComponent.onSubmit = (newObject) => {
   pointsContainer.replaceChild(pointComponent.element, pointEditComponent.element);
   pointEditComponent.unrender();
 };
+
+pointEditComponent.onDelete = () => {
+  pointEditComponent.unrender();
+};
+
+const renderFilters = (items) => {
+  filtersContainer.innerHTML = ``;
+
+  for (let i = 0; i < items.length; i++) {
+    const item = filters[i];
+    const itemComponent = new Filter(item);
+    filtersContainer.appendChild(itemComponent.render());
+  }
+};
+
+renderFilters(filters);

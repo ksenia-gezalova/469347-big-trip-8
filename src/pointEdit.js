@@ -16,12 +16,10 @@ export class PointEdit extends Component {
     this._price = data.price;
     this._offers = data.offers;
 
-    this._state.isDate = false;
     this._onSubmit = null;
-    this._onReset = null;
+    this._onDelete = null;
     this._onSubmitClick = this._onSubmitClick.bind(this);
-    this._onResetClick = this._onResetClick.bind(this);
-    this._onChangeDate = this._onChangeDate.bind(this);
+    this._onDeleteClick = this._onDeleteClick.bind(this);
   }
 
   _processForm(formData) {
@@ -45,11 +43,9 @@ export class PointEdit extends Component {
     this._onSubmit = fn;
   }
 
-  set onReset(fn) {
-    this._onReset = fn;
+  set onDelete(fn) {
+    this._onDelete = fn;
   }
-
-  _onChangeDate() {}
 
   _onSubmitClick(evt) {
     evt.preventDefault();
@@ -60,9 +56,10 @@ export class PointEdit extends Component {
     this.update(newData);
   }
 
-  _onResetClick() {
+  _onDeleteClick(evt) {
+    evt.preventDefault();
     // eslint-disable-next-line no-unused-expressions
-    typeof this._onReset === `function` && this._onReset();
+    typeof this._onDelete === `function` && this._onDelete();
   }
 
   get template() {
@@ -124,14 +121,12 @@ export class PointEdit extends Component {
               <label class="point__price">
                 write price
                 <span class="point__price-currency">€</span>
-                <input class="point__input" type="text" value="${
-  this._price
-}" name="price">
+                <input class="point__input" type="text" value="${this._price}" name="price">
               </label>
 
               <div class="point__buttons">
                 <button class="point__button point__button--save" type="submit">Save</button>
-                <button class="point__button" type="reset">Delete</button>
+                <button class="point__button point__button--delete" type="reset">Delete</button>
               </div>
 
               <div class="paint__favorite-wrap">
@@ -189,6 +184,9 @@ export class PointEdit extends Component {
     this._element
       .querySelector(`.point__form`)
       .addEventListener(`submit`, this._onSubmitClick);
+    this._element
+      .querySelector(`.point__form`)
+      .addEventListener(`reset`, this._onDeleteClick);
   }
 
   unbind() {

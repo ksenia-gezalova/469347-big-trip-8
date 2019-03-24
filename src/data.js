@@ -39,3 +39,14 @@ export const point = {
   price: 10 + Math.floor(Math.random() * 100),
   description: TEXT.split(`.`).splice(1, Math.floor(Math.random() * 3))
 };
+
+export const filters = [{
+  caption: `Everything`
+},
+{
+  caption: `Future`
+},
+{
+  caption: `Past`
+}
+];
