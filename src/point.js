@@ -14,10 +14,11 @@ const getOffer = (offer) => {
 export class Point extends Component {
   constructor(data) {
     super();
-    this._title = data.title;
+    this._title = data.type.caption + ` ` + data.place;
+    this._place = data.place;
     this._dateStart = data.date.start;
     this._dateEnd = data.date.end;
-    this._type = data.type.train;
+    this._type = data.type.icon;
     this._duration = data.duration;
     this._price = data.price;
     this._offers = data.offers;
@@ -60,11 +61,7 @@ export class Point extends Component {
   }
 
   update(data) {
-    /* this._title = data.title;
-    this._type = data.type;
-    this._dateStart = data.dateStart;
-    this._dateEnd = data.dateEnd;
-    this._duration = data.duration; */
+    this._title = data.type.caption + ` ` + data.place;
     this._price = data.price;
   }
 }

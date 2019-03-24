@@ -8,10 +8,12 @@ import {
 export class PointEdit extends Component {
   constructor(data) {
     super();
-    this._title = data.title;
+    this._title = data.type.caption + ` ` + data.place;
+    this._place = data.place;
     this._dateStart = data.date.start;
     this._dateEnd = data.date.end;
-    this._type = data.type;
+    this._type = data.type.icon;
+    this._caption = data.type.caption;
     this._duration = data.duration;
     this._price = data.price;
     this._offers = data.offers;
@@ -25,13 +27,14 @@ export class PointEdit extends Component {
   _processForm(formData) {
     const entry = {
       price: ``,
-      title: ``
+      place: ``
     };
 
     const pointEditMapper = PointEdit.createMapper(entry);
 
     for (const pair of formData.entries()) {
       const [property, value] = pair;
+      // console.log(pair);
       // eslint-disable-next-line no-unused-expressions
       pointEditMapper[property] && pointEditMapper[property](value);
     }
@@ -73,7 +76,7 @@ export class PointEdit extends Component {
               </label>
 
               <div class="travel-way">
-                <label class="travel-way__label" for="travel-way__toggle">✈️</label>
+                <label class="travel-way__label" for="travel-way__toggle">${this._type}</label>
 
                 <input type="checkbox" class="travel-way__toggle visually-hidden" id="travel-way__toggle">
 
@@ -103,8 +106,8 @@ export class PointEdit extends Component {
               </div>
 
               <div class="point__destination-wrap">
-                <label class="point__destination-label" for="destination">Flight to</label>
-                <input class="point__destination-input" list="destination-select" id="destination" value="${this._title}" name="destination">
+                <label class="point__destination-label" for="destination">${this._caption}</label>
+                <input class="point__destination-input" list="destination-select" id="destination" value="${this._place}" name="destination">
                 <datalist id="destination-select">
                   <option value="airport"></option>
                   <option value="Geneva"></option>
@@ -193,20 +196,21 @@ export class PointEdit extends Component {
     this._element
       .querySelector(`.point__form`)
       .removeEventListener(`submit`, this._onSubmitClick);
+    this._element
+      .querySelector(`.point__form`)
+      .removeEventListener(`reset`, this._onDeleteClick);
   }
 
   update(data) {
-    this._title = data.title;
-    this._type = data.type;
-    this._dateStart = data.dateStart;
-    this._dateEnd = data.dateEnd;
-    this._duration = data.duration;
+    this._title = data.type.caption + ` ` + data.place;
+    this._place = data.place;
     this._price = data.price;
   }
 
   static createMapper(target) {
     return {
-      'price': (value) => (target.price = value)
+      'price': (value) => (target.price = value),
+      'destination': (value) => (target.place = value)
     };
   }
 }

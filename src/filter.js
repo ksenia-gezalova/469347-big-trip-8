@@ -6,10 +6,7 @@ export class Filter extends Component {
   constructor(data) {
     super();
     this._caption = data.caption;
-    this._state = {
-      isChecked: false
-    };
-
+    this._state.isChecked = this._caption === `Everything` ? true : false;
     this._onFilter = null;
     this._onFilterClick = this._onFilterClick.bind(this);
   }

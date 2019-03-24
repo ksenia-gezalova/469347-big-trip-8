@@ -1,7 +1,5 @@
 import {
-  point
-} from './data';
-import {
+  points,
   filters
 } from './data';
 import {
@@ -13,45 +11,38 @@ import {
 import {
   Filter
 } from "./filter";
+import {
+  getStat
+} from './stat';
 
 
+const tripLinks = document.querySelector(`.trip-links`);
+const mainContainer = document.querySelector(`.main`);
+const stat = document.querySelector(`.statistic`);
 const filtersContainer = document.querySelector(`.trip-filter`);
 const pointsContainer = document.querySelector(`.trip-day__items`);
-const pointComponent = new Point(point);
-const pointEditComponent = new PointEdit(point);
-// listener for filters
-/* filtersContainer.addEventListener(`change`, (evt) => {
-  if (evt.target.name === `filter`) {
-    removeItems(pointsContainer);
-    renderItems(pointsContainer, points.slice(getRandomValue(1, points.length)), getPoint);
+
+const deletePoint = (items, i) => {
+  items.splice(i, 1);
+  return items;
+};
+
+// eslint-disable-next-line consistent-return
+const filterPoints = (items, name) => {
+  switch (name) {
+    case `filter-everything`:
+      return items;
+
+    case `filter-future`:
+      return items.filter((item) => item.duration > Date.now());
+
+    case `filter-past`:
+      return items.filter((item) => item.duration < Date.now());
   }
-}); */
-
-pointsContainer.appendChild(pointComponent.render());
-// filtersContainer.appendChild(filterComponent.render());
-
-pointComponent.onEdit = () => {
-  pointEditComponent.render();
-  pointsContainer.replaceChild(pointEditComponent.element, pointComponent.element);
-  pointComponent.unrender();
-};
-
-pointEditComponent.onSubmit = (newObject) => {
-  point.price = newObject.price;
-
-  pointComponent.update(point);
-  pointComponent.render();
-  pointsContainer.replaceChild(pointComponent.element, pointEditComponent.element);
-  pointEditComponent.unrender();
-};
-
-pointEditComponent.onDelete = () => {
-  pointEditComponent.unrender();
 };
 
 const renderFilters = (items) => {
   filtersContainer.innerHTML = ``;
-
   for (let i = 0; i < items.length; i++) {
     const item = filters[i];
     const itemComponent = new Filter(item);
@@ -59,4 +50,56 @@ const renderFilters = (items) => {
   }
 };
 
+const renderPoints = (items) => {
+  pointsContainer.innerHTML = ``;
+
+  for (let i = 0; i < items.length; i++) {
+    const point = items[i];
+    const pointComponent = new Point(point);
+    const pointEditComponent = new PointEdit(point);
+
+    pointComponent.onEdit = () => {
+      pointEditComponent.render();
+      pointsContainer.replaceChild(pointEditComponent.element, pointComponent.element);
+      pointComponent.unrender();
+    };
+
+    pointEditComponent.onSubmit = (newObject) => {
+      point.price = newObject.price;
+
+      pointComponent.update(point);
+      pointComponent.render();
+      pointsContainer.replaceChild(pointComponent.element, pointEditComponent.element);
+      pointEditComponent.unrender();
+    };
+
+    pointEditComponent.onDelete = () => {
+      deletePoint(items, i);
+      pointEditComponent.unrender();
+    };
+
+    pointsContainer.appendChild(pointComponent.render());
+  }
+};
+
+tripLinks.addEventListener(`click`, (evt) => {
+  evt.preventDefault();
+  if (evt.target.textContent === `Stats`) {
+    mainContainer.classList.add(`visually-hidden`);
+    stat.classList.remove(`visually-hidden`);
+    getStat();
+  } else {
+    mainContainer.classList.remove(`visually-hidden`);
+    stat.classList.add(`visually-hidden`);
+  }
+});
+
+
+filtersContainer.addEventListener(`change`, (evt) => {
+  const filterName = evt.target.id;
+  const filteredPoints = filterPoints(points, filterName);
+  renderPoints(filteredPoints);
+});
+
 renderFilters(filters);
+renderPoints(points);
