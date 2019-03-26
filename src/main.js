@@ -1,20 +1,8 @@
-import {
-  points,
-  filters
-} from './data';
-import {
-  Point
-} from './point';
-import {
-  PointEdit
-} from './pointEdit';
-import {
-  Filter
-} from "./filter";
-import {
-  getStat
-} from './stat';
-
+import {points, filters} from "./data";
+import {Point} from "./point";
+import {PointEdit} from "./pointEdit";
+import {Filter} from "./filter";
+import {getStat} from "./stat";
 
 const tripLinks = document.querySelector(`.trip-links`);
 const mainContainer = document.querySelector(`.main`);
@@ -24,7 +12,6 @@ const pointsContainer = document.querySelector(`.trip-day__items`);
 
 const deletePoint = (items, i) => {
   items.splice(i, 1);
-  return items;
 };
 
 // eslint-disable-next-line consistent-return
@@ -60,7 +47,10 @@ const renderPoints = (items) => {
 
     pointComponent.onEdit = () => {
       pointEditComponent.render();
-      pointsContainer.replaceChild(pointEditComponent.element, pointComponent.element);
+      pointsContainer.replaceChild(
+          pointEditComponent.element,
+          pointComponent.element
+      );
       pointComponent.unrender();
     };
 
@@ -69,17 +59,32 @@ const renderPoints = (items) => {
 
       pointComponent.update(point);
       pointComponent.render();
-      pointsContainer.replaceChild(pointComponent.element, pointEditComponent.element);
+      pointsContainer.replaceChild(
+          pointComponent.element,
+          pointEditComponent.element
+      );
       pointEditComponent.unrender();
     };
 
     pointEditComponent.onDelete = () => {
       deletePoint(items, i);
       pointEditComponent.unrender();
+      renderPoints(items);
     };
 
     pointsContainer.appendChild(pointComponent.render());
   }
+};
+
+const toggleHandler = (element) => {
+  let items = element.querySelectorAll(`.view-switch__item`);
+  items.forEach((item) => {
+    if (item.classList.contains(`.view-switch__item--active`)) {
+      item.classList.remove(`view-switch__item--active`);
+    } else {
+      item.classList.add(`view-switch__item--active`);
+    }
+  });
 };
 
 tripLinks.addEventListener(`click`, (evt) => {
@@ -92,8 +97,8 @@ tripLinks.addEventListener(`click`, (evt) => {
     mainContainer.classList.remove(`visually-hidden`);
     stat.classList.add(`visually-hidden`);
   }
+  toggleHandler(tripLinks);
 });
-
 
 filtersContainer.addEventListener(`change`, (evt) => {
   const filterName = evt.target.id;
