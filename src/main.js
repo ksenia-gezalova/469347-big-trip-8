@@ -1,19 +1,8 @@
-import {
-  points,
-  filters
-} from "./data";
-import {
-  Point
-} from "./point";
-import {
-  PointEdit
-} from "./pointEdit";
-import {
-  Filter
-} from "./filter";
-import {
-  getStat
-} from "./stat";
+import {points, filters} from "./data";
+import {Point} from "./point";
+import {PointEdit} from "./pointEdit";
+import {Filter} from "./filter";
+import {getStat} from "./stat";
 
 const MS_IN_DAY = 24 * 60 * 60 * 1000;
 
@@ -26,46 +15,47 @@ const newEventBtn = document.querySelector(`.trip-controls__new-event`);
 
 const createPoint = (items) => {
   const item = {
-    type: [{
-      icon: `🚕`,
-      caption: `Taxi to`
-    },
-    {
-      icon: `🚌`,
-      caption: `Bus to`
-    },
-    {
-      icon: `🚂`,
-      caption: `Train to`
-    },
-    {
-      icon: `🛳️`,
-      caption: `Ship to`
-    },
-    {
-      icon: `🚊`,
-      caption: `Transport to`
-    },
-    {
-      icon: `🚗`,
-      caption: `Drive to`
-    },
-    {
-      icon: `✈️`,
-      caption: `Flight to`
-    },
-    {
-      icon: `🏨`,
-      caption: `Check-in`
-    },
-    {
-      icon: `🏛️`,
-      caption: `Sightseeing`
-    },
-    {
-      icon: `🍴`,
-      caption: `Restaurant in`
-    },
+    type: [
+      {
+        icon: `🚕`,
+        caption: `Taxi to`
+      },
+      {
+        icon: `🚌`,
+        caption: `Bus to`
+      },
+      {
+        icon: `🚂`,
+        caption: `Train to`
+      },
+      {
+        icon: `🛳️`,
+        caption: `Ship to`
+      },
+      {
+        icon: `🚊`,
+        caption: `Transport to`
+      },
+      {
+        icon: `🚗`,
+        caption: `Drive to`
+      },
+      {
+        icon: `✈️`,
+        caption: `Flight to`
+      },
+      {
+        icon: `🏨`,
+        caption: `Check-in`
+      },
+      {
+        icon: `🏛️`,
+        caption: `Sightseeing`
+      },
+      {
+        icon: `🍴`,
+        caption: `Restaurant in`
+      }
     ][Math.floor(Math.random() * 10)],
     place: [
       `Oslo`,
@@ -76,9 +66,7 @@ const createPoint = (items) => {
       `Tortuga`,
       `Moscow`
     ][Math.floor(Math.random() * 7)],
-    offers: [
-      `Add luggage`,
-    ],
+    offers: [`Add luggage`],
     pictureURL: `http://picsum.photos/300/150?r=${Math.random()}`,
     date: {
       start: Date.now() + Math.floor(Math.random() * 6) * MS_IN_DAY,
@@ -161,16 +149,13 @@ const renderPoints = (items) => {
 const toggleHandler = (element) => {
   let items = element.querySelectorAll(`.view-switch__item`);
   items.forEach((item) => {
-    if (item.classList.contains(`.view-switch__item--active`)) {
-      item.classList.remove(`view-switch__item--active`);
-    } else {
-      item.classList.add(`view-switch__item--active`);
-    }
+    item.classList.remove(`view-switch__item--active`);
   });
 };
 
 tripLinks.addEventListener(`click`, (evt) => {
   evt.preventDefault();
+  toggleHandler(tripLinks);
   if (evt.target.textContent === `Stats`) {
     mainContainer.classList.add(`visually-hidden`);
     stat.classList.remove(`visually-hidden`);
@@ -179,7 +164,7 @@ tripLinks.addEventListener(`click`, (evt) => {
     mainContainer.classList.remove(`visually-hidden`);
     stat.classList.add(`visually-hidden`);
   }
-  toggleHandler(tripLinks);
+  evt.target.classList.add(`view-switch__item--active`);
 });
 
 filtersContainer.addEventListener(`change`, (evt) => {
