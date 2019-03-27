@@ -1,22 +1,65 @@
 import {
   Component
 } from "./component";
+import {
+  API
+} from './api';
 
-// import moment from 'moment';
-// import flatpickr from 'flatpickr';
+import moment from 'moment';
+import flatpickr from "flatpickr";
+
+const TYPE = {
+  'taxi': [`🚕`,
+    `Taxi to`
+  ],
+  'bus': [
+    `🚌`,
+    `Bus to`
+  ],
+  'train': [
+    `🚂`,
+    `Train to`
+  ],
+  'ship': [`🛳️`,
+    `Ship to`
+  ],
+  'transport': [`🚊`,
+    `Transport to`
+  ],
+  'drive': [`🚗`,
+    `Drive to`
+  ],
+  'flight': [
+    `✈️`,
+    `Flight to`
+  ],
+  'check-in': [
+    `🏨`,
+    `Check-in`
+  ],
+  'sightseeing': [
+    `🏛️`,
+    `Sightseeing`
+  ],
+  'restaurant': [
+    `🍴`,
+    `Restaurant in`
+  ]
+};
 
 export class PointEdit extends Component {
   constructor(data) {
     super();
-    this._title = data.type.caption + ` ` + data.place;
+    this._id = data.id;
+    this._title = data.destination.name;
+    this._description = data.destination.description;
     this._place = data.place;
-    this._dateStart = data.date.start;
-    this._dateEnd = data.date.end;
-    this._type = data.type.icon;
-    this._caption = data.type.caption;
-    this._duration = data.duration;
-    this._price = data.price;
+    this._dateStart = data.date_from;
+    this._dateEnd = data.date_to;
+    this._type = data.type;
+    this._price = data.base_price;
     this._offers = data.offers;
+    this._isFavotite = data.is_favorite;
 
     this._onSubmit = null;
     this._onDelete = null;
@@ -62,7 +105,9 @@ export class PointEdit extends Component {
   _onDeleteClick(evt) {
     evt.preventDefault();
     // eslint-disable-next-line no-unused-expressions
-    typeof this._onDelete === `function` && this._onDelete();
+    typeof this._onDelete === `function` && this._onDelete({
+      id: this._id
+    });
   }
 
   get template() {
@@ -72,11 +117,12 @@ export class PointEdit extends Component {
             <header class="point__header">
               <label class="point__date">
                 choose day
-                <input class="point__input" type="text" placeholder="MAR 18" name="day">
+                <input class="point__input point__input--day" type="text" placeholder="MAR 18" name="day">
               </label>
 
               <div class="travel-way">
-                <label class="travel-way__label" for="travel-way__toggle">${this._type}</label>
+                <label class="travel-way__label" for="travel-way__toggle">${TYPE[this._type][0]}
+                </label>
 
                 <input type="checkbox" class="travel-way__toggle visually-hidden" id="travel-way__toggle">
 
@@ -106,8 +152,9 @@ export class PointEdit extends Component {
               </div>
 
               <div class="point__destination-wrap">
-                <label class="point__destination-label" for="destination">${this._caption}</label>
-                <input class="point__destination-input" list="destination-select" id="destination" value="${this._place}" name="destination">
+                <label class="point__destination-label" for="destination">${TYPE[this._type][1]}</label>
+                <input class="point__destination-input" list="destination-select" id="destination" value="${this._title
+}" name="destination">
                 <datalist id="destination-select">
                   <option value="airport"></option>
                   <option value="Geneva"></option>
@@ -116,10 +163,11 @@ export class PointEdit extends Component {
                 </datalist>
               </div>
 
-              <label class="point__time">
+              <div class="point__time">
                 choose time
-                <input class="point__input" type="text" value="00:00 — 00:00" name="time" placeholder="00:00 — 00:00">
-              </label>
+                <input class="point__input point__input--start" type="text" value="${moment(this._dateStart).format(`HH:mm`)}" name="date-start" placeholder="19:00">
+                <input class="point__input point__input--end" type="text" value="${moment(this._dateEnd).format(`HH:mm`)}" name="date-end" placeholder="21:00">
+              </div>
 
               <label class="point__price">
                 write price
@@ -133,7 +181,7 @@ export class PointEdit extends Component {
               </div>
 
               <div class="paint__favorite-wrap">
-                <input type="checkbox" class="point__favorite-input visually-hidden" id="favorite" name="favorite">
+                <input type="checkbox" class="point__favorite-input visually-hidden" id="favorite" name="favorite" ${this._isFavotite ? `checked` : ``}>
                 <label class="point__favorite" for="favorite">favorite</label>
               </div>
             </header>
@@ -167,7 +215,7 @@ export class PointEdit extends Component {
               </section>
               <section class="point__destination">
                 <h3 class="point__details-title">Destination</h3>
-                <p class="point__destination-text">Geneva is a city in Switzerland that lies at the southern tip of expansive Lac Léman (Lake Geneva). Surrounded by the Alps and Jura mountains, the city has views of dramatic Mont Blanc.</p>
+                <p class="point__destination-text">${this._description}</p>
                 <div class="point__destination-images">
                   <img src="http://picsum.photos/330/140?r=123" alt="picture from place" class="point__destination-image">
                   <img src="http://picsum.photos/300/200?r=1234" alt="picture from place" class="point__destination-image">
@@ -190,6 +238,26 @@ export class PointEdit extends Component {
     this._element
       .querySelector(`.point__form`)
       .addEventListener(`reset`, this._onDeleteClick);
+
+    flatpickr(`.point__input--day`, {
+      altInput: true,
+      altFormat: `j F`,
+      dateFormat: `j F`
+    });
+    flatpickr(`.point__input--start`, {
+      enableTime: true,
+      noCalendar: true,
+      altInput: true,
+      altFormat: `h:i K`,
+      dateFormat: `h:i K`
+    });
+    flatpickr(`.point__input--end`, {
+      enableTime: true,
+      noCalendar: true,
+      altInput: true,
+      altFormat: `h:i K`,
+      dateFormat: `h:i K`
+    });
   }
 
   unbind() {
@@ -202,15 +270,12 @@ export class PointEdit extends Component {
   }
 
   update(data) {
-    this._title = data.type.caption + ` ` + data.place;
-    this._place = data.place;
     this._price = data.price;
   }
 
   static createMapper(target) {
     return {
-      'price': (value) => (target.price = value),
-      'destination': (value) => (target.place = value)
+      price: (value) => (target.price = value)
     };
   }
 }

@@ -7,21 +7,61 @@ import moment from 'moment';
 const getOffer = (offer) => {
   return `
     <li>
-      <button class="trip-point__offer">${offer} +&euro;&nbsp;20</button>
+      <button class="trip-point__offer">${offer.title} +&euro;&nbsp;${offer.price}</button>
     </li>`;
+};
+
+const TYPE = {
+  'taxi': [`🚕`,
+    `Taxi to`
+  ],
+  'bus': [
+    `🚌`,
+    `Bus to`
+  ],
+  'train': [
+    `🚂`,
+    `Train to`
+  ],
+  'ship': [`🛳️`,
+    `Ship to`
+  ],
+  'transport': [`🚊`,
+    `Transport to`
+  ],
+  'drive': [`🚗`,
+    `Drive to`
+  ],
+  'flight': [
+    `✈️`,
+    `Flight to`
+  ],
+  'check-in': [
+    `🏨`,
+    `Check-in`
+  ],
+  'sightseeing': [
+    `🏛️`,
+    `Sightseeing`
+  ],
+  'restaurant': [
+    `🍴`,
+    `Restaurant in`
+  ]
 };
 
 export class Point extends Component {
   constructor(data) {
     super();
-    this._title = data.type.caption + ` ` + data.place;
+    this._id = data.id;
+    this._title = data.destination.name;
     this._place = data.place;
-    this._dateStart = data.date.start;
-    this._dateEnd = data.date.end;
-    this._type = data.type.icon;
-    this._duration = data.duration;
-    this._price = data.price;
+    this._dateStart = data.date_from;
+    this._dateEnd = data.date_to;
+    this._type = data.type;
+    this._price = data.base_price;
     this._offers = data.offers;
+    this._duration = data.date_to - data.date_from;
 
     this._onEdit = null;
     this._onEditButtonClick = this._onEditButtonClick.bind(this);
@@ -38,8 +78,8 @@ export class Point extends Component {
 
   get template() {
     return `<article class="trip-point">
-                <i class="trip-icon">${this._type}</i>
-                <h3 class="trip-point__title">${this._title}</h3>
+                <i class="trip-icon">${TYPE[this._type][0]}</i>
+                <h3 class="trip-point__title">${TYPE[this._type][1] + ` ` + this._title}</h3>
                 <p class="trip-point__schedule">
                   <span class="trip-point__timetable">${moment(this._dateStart).format(`LT`)}&nbsp;&mdash; ${moment(this._dateEnd).format(`LT`)}</span>
                   <span class="trip-point__duration">${moment(this._duration).format(`DD MMMM`)}</span>
@@ -61,7 +101,6 @@ export class Point extends Component {
   }
 
   update(data) {
-    this._title = data.type.caption + ` ` + data.place;
     this._price = data.price;
   }
 }

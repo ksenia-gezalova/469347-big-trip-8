@@ -1,10 +1,31 @@
-import {points, filters} from "./data";
-import {Point} from "./point";
-import {PointEdit} from "./pointEdit";
-import {Filter} from "./filter";
-import {getStat} from "./stat";
+import {
+  points,
+  filters
+} from "./data";
+import {
+  Point
+} from "./point";
+import {
+  PointEdit
+} from "./pointEdit";
+import {
+  Filter
+} from "./filter";
+import {
+  getStat
+} from "./stat";
+import {
+  API
+} from './api';
 
 const MS_IN_DAY = 24 * 60 * 60 * 1000;
+const AUTHORIZATION = `Basic dXNlckBwYXNzd29yZAo=${Math.random()}`;
+const END_POINT = `https://es8-demo-srv.appspot.com/big-trip/`;
+
+const api = new API({
+  endPoint: END_POINT,
+  authorization: AUTHORIZATION
+});
 
 const tripLinks = document.querySelector(`.trip-links`);
 const mainContainer = document.querySelector(`.main`);
@@ -15,47 +36,46 @@ const newEventBtn = document.querySelector(`.trip-controls__new-event`);
 
 const createPoint = (items) => {
   const item = {
-    type: [
-      {
-        icon: `🚕`,
-        caption: `Taxi to`
-      },
-      {
-        icon: `🚌`,
-        caption: `Bus to`
-      },
-      {
-        icon: `🚂`,
-        caption: `Train to`
-      },
-      {
-        icon: `🛳️`,
-        caption: `Ship to`
-      },
-      {
-        icon: `🚊`,
-        caption: `Transport to`
-      },
-      {
-        icon: `🚗`,
-        caption: `Drive to`
-      },
-      {
-        icon: `✈️`,
-        caption: `Flight to`
-      },
-      {
-        icon: `🏨`,
-        caption: `Check-in`
-      },
-      {
-        icon: `🏛️`,
-        caption: `Sightseeing`
-      },
-      {
-        icon: `🍴`,
-        caption: `Restaurant in`
-      }
+    type: [{
+      icon: `🚕`,
+      caption: `Taxi to`
+    },
+    {
+      icon: `🚌`,
+      caption: `Bus to`
+    },
+    {
+      icon: `🚂`,
+      caption: `Train to`
+    },
+    {
+      icon: `🛳️`,
+      caption: `Ship to`
+    },
+    {
+      icon: `🚊`,
+      caption: `Transport to`
+    },
+    {
+      icon: `🚗`,
+      caption: `Drive to`
+    },
+    {
+      icon: `✈️`,
+      caption: `Flight to`
+    },
+    {
+      icon: `🏨`,
+      caption: `Check-in`
+    },
+    {
+      icon: `🏛️`,
+      caption: `Sightseeing`
+    },
+    {
+      icon: `🍴`,
+      caption: `Restaurant in`
+    }
     ][Math.floor(Math.random() * 10)],
     place: [
       `Oslo`,
@@ -136,11 +156,17 @@ const renderPoints = (items) => {
       pointEditComponent.unrender();
     };
 
-    pointEditComponent.onDelete = () => {
-      deletePoint(items, i);
-      pointEditComponent.unrender();
-      renderPoints(items);
-    };
+    pointEditComponent.onDelete = (({
+      id
+    }) => {
+      api.deletePoint({
+        id
+      })
+        .then(pointEditComponent.unrender())
+        .then(() => api.getPoints)
+        .then(renderPoints)
+        .catch(alert);
+    });
 
     pointsContainer.appendChild(pointComponent.render());
   }
@@ -179,4 +205,12 @@ newEventBtn.addEventListener(`click`, (evt) => {
 });
 
 renderFilters(filters);
-renderPoints(points);
+// renderPoints(points);
+
+
+api.getPoints()
+  .then((items) => {
+    renderPoints(items);
+  });
+// api.getDestintions();
+api.getOffers();
