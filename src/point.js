@@ -12,7 +12,8 @@ const getOffer = (offer) => {
 };
 
 const TYPE = {
-  'taxi': [`🚕`,
+  'taxi': [
+    `🚕`,
     `Taxi to`
   ],
   'bus': [

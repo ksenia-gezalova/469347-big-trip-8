@@ -1,5 +1,4 @@
 import {
-  points,
   filters
 } from "./data";
 import {
@@ -16,7 +15,7 @@ import {
 } from "./stat";
 import {
   API
-} from './api';
+} from "./api";
 
 const MS_IN_DAY = 24 * 60 * 60 * 1000;
 const AUTHORIZATION = `Basic dXNlckBwYXNzd29yZAo=${Math.random()}`;
@@ -156,17 +155,18 @@ const renderPoints = (items) => {
       pointEditComponent.unrender();
     };
 
-    pointEditComponent.onDelete = (({
+    pointEditComponent.onDelete = ({
       id
     }) => {
-      api.deletePoint({
-        id
-      })
-        .then(pointEditComponent.unrender())
-        .then(() => api.getPoints)
+      api
+        .deletePoint({
+          id
+        })
+        .then(() => pointEditComponent.unrender())
+        .then(api.getPoints)
         .then(renderPoints)
         .catch(alert);
-    });
+    };
 
     pointsContainer.appendChild(pointComponent.render());
   }
@@ -193,24 +193,22 @@ tripLinks.addEventListener(`click`, (evt) => {
   evt.target.classList.add(`view-switch__item--active`);
 });
 
-filtersContainer.addEventListener(`change`, (evt) => {
+/* filtersContainer.addEventListener(`change`, (evt) => {
   const filterName = evt.target.id;
   const filteredPoints = filterPoints(points, filterName);
   renderPoints(filteredPoints);
-});
+}); */
 
-newEventBtn.addEventListener(`click`, (evt) => {
+/* newEventBtn.addEventListener(`click`, (evt) => {
   evt.preventDefault();
   createPoint(points);
 });
-
+ */
 renderFilters(filters);
 // renderPoints(points);
 
-
-api.getPoints()
-  .then((items) => {
-    renderPoints(items);
-  });
+api.getPoints().then((items) => {
+  renderPoints(items);
+});
 // api.getDestintions();
 api.getOffers();
