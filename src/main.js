@@ -17,7 +17,6 @@ import {
   API
 } from "./api";
 
-const MS_IN_DAY = 24 * 60 * 60 * 1000;
 const AUTHORIZATION = `Basic dXNlckBwYXNzd29yZAo=${Math.random()}`;
 const END_POINT = `https://es8-demo-srv.appspot.com/big-trip/`;
 
@@ -31,80 +30,10 @@ const mainContainer = document.querySelector(`.main`);
 const stat = document.querySelector(`.statistic`);
 const filtersContainer = document.querySelector(`.trip-filter`);
 const pointsContainer = document.querySelector(`.trip-day__items`);
-const newEventBtn = document.querySelector(`.trip-controls__new-event`);
-
-const createPoint = (items) => {
-  const item = {
-    type: [{
-      icon: `🚕`,
-      caption: `Taxi to`
-    },
-    {
-      icon: `🚌`,
-      caption: `Bus to`
-    },
-    {
-      icon: `🚂`,
-      caption: `Train to`
-    },
-    {
-      icon: `🛳️`,
-      caption: `Ship to`
-    },
-    {
-      icon: `🚊`,
-      caption: `Transport to`
-    },
-    {
-      icon: `🚗`,
-      caption: `Drive to`
-    },
-    {
-      icon: `✈️`,
-      caption: `Flight to`
-    },
-    {
-      icon: `🏨`,
-      caption: `Check-in`
-    },
-    {
-      icon: `🏛️`,
-      caption: `Sightseeing`
-    },
-    {
-      icon: `🍴`,
-      caption: `Restaurant in`
-    }
-    ][Math.floor(Math.random() * 10)],
-    place: [
-      `Oslo`,
-      `Maldives`,
-      `New Zeland`,
-      `Goa`,
-      `Antigua and Barbuda`,
-      `Tortuga`,
-      `Moscow`
-    ][Math.floor(Math.random() * 7)],
-    offers: [`Add luggage`],
-    pictureURL: `http://picsum.photos/300/150?r=${Math.random()}`,
-    date: {
-      start: Date.now() + Math.floor(Math.random() * 6) * MS_IN_DAY,
-      end: Date.now() + Math.floor(Math.random() * 6) * MS_IN_DAY
-    },
-    duration: Date.now() + Math.floor(Math.random() * 6) * MS_IN_DAY,
-    price: 10 + Math.floor(Math.random() * 100),
-    description: `bla bla bla`
-  };
-  items.unshift(item);
-  renderPoints(items);
-};
-
-const deletePoint = (items, i) => {
-  items.splice(i, 1);
-};
+// const newEventBtn = document.querySelector(`.trip-controls__new-event`);
 
 // eslint-disable-next-line consistent-return
-const filterPoints = (items, name) => {
+/* const filterPoints = (items, name) => {
   switch (name) {
     case `filter-everything`:
       return items;
@@ -115,7 +44,7 @@ const filterPoints = (items, name) => {
     case `filter-past`:
       return items.filter((item) => item.duration < Date.now());
   }
-};
+}; */
 
 const renderFilters = (items) => {
   filtersContainer.innerHTML = ``;
@@ -163,7 +92,7 @@ const renderPoints = (items) => {
           id
         })
         .then(() => pointEditComponent.unrender())
-        .then(api.getPoints)
+        .then(() => api.getPoints())
         .then(renderPoints)
         .catch(alert);
     };
@@ -210,5 +139,3 @@ renderFilters(filters);
 api.getPoints().then((items) => {
   renderPoints(items);
 });
-// api.getDestintions();
-api.getOffers();

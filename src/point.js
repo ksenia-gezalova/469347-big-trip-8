@@ -78,22 +78,22 @@ export class Point extends Component {
   }
 
   get template() {
-    return `<article class="trip-point">
+    return `<div><article class="trip-point">
                 <i class="trip-icon">${TYPE[this._type][0]}</i>
                 <h3 class="trip-point__title">${TYPE[this._type][1] + ` ` + this._title}</h3>
                 <p class="trip-point__schedule">
                   <span class="trip-point__timetable">${moment(this._dateStart).format(`LT`)}&nbsp;&mdash; ${moment(this._dateEnd).format(`LT`)}</span>
-                  <span class="trip-point__duration">${moment(this._duration).format(`DD MMMM`)}</span>
+                  <span class="trip-point__duration">${moment(this._duration).format(`HH:mm`)}</span>
                 </p>
                 <p class="trip-point__price">&euro;&nbsp;${this._price}</p>
                 <ul class="trip-point__offers">
                 ${this._offers.map(getOffer).join(``)}
                 </ul>
-            </article>`.trim();
+            </article></div>`.trim();
   }
 
   bind() {
-    this._element.querySelector(`.trip-icon`).addEventListener(`click`, this._onEditButtonClick);
+    this._element.querySelector(`.trip-point`).addEventListener(`click`, this._onEditButtonClick);
   }
 
   unbind() {

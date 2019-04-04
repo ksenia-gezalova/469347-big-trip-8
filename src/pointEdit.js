@@ -1,3 +1,4 @@
+/* eslint-disable no-return-assign */
 import {
   Component
 } from "./component";
@@ -7,6 +8,14 @@ import {
 
 import moment from 'moment';
 import flatpickr from "flatpickr";
+
+const AUTHORIZATION = `Basic dXNlckBwYXNzd29yZAo=${Math.random()}`;
+const END_POINT = `https://es8-demo-srv.appspot.com/big-trip/`;
+
+const api = new API({
+  endPoint: END_POINT,
+  authorization: AUTHORIZATION
+});
 
 const TYPE = {
   'taxi': [`🚕`,
@@ -45,6 +54,36 @@ const TYPE = {
     `🍴`,
     `Restaurant in`
   ]
+};
+
+let offersList = [];
+let destinationsList = [];
+
+api.getOffers()
+  .then((items) => {
+    offersList = items;
+  });
+
+api.getDestintions()
+  .then((items) => {
+    destinationsList = items;
+  });
+
+// eslint-disable-next-line consistent-return
+const getOffers = (item, type) => {
+  if (item.type === type) {
+    return item.offers.map((element) => {
+      return `
+                  <input class="point__offers-input visually-hidden" type="checkbox" id="${element.name}" name="offer" value="${element.name}">
+                  <label for="${element.name}" class="point__offers-label">
+                    <span class="point__offer-service">${element.name}</span> + €<span class="point__offer-price">${element.price}</span>
+                  </label>`;
+    });
+  }
+};
+
+const getDestination = (destination) => {
+  return `<option value="${destination.name}"></option>`;
 };
 
 export class PointEdit extends Component {
@@ -110,6 +149,28 @@ export class PointEdit extends Component {
     });
   }
 
+  _initFlatPickr() {
+    flatpickr(this._element.querySelector(`.point__input--day`), {
+      altInput: true,
+      altFormat: `j F`,
+      dateFormat: `j F`
+    });
+    flatpickr(this._element.querySelector(`.point__input--start`), {
+      enableTime: true,
+      noCalendar: true,
+      altInput: true,
+      altFormat: `h:i K`,
+      dateFormat: `h:i K`,
+    });
+    flatpickr(this._element.querySelector(`.point__input--end`), {
+      enableTime: true,
+      noCalendar: true,
+      altInput: true,
+      altFormat: `h:i K`,
+      dateFormat: `h:i K`
+    });
+  }
+
   get template() {
     return `
         <article class="point">
@@ -153,13 +214,9 @@ export class PointEdit extends Component {
 
               <div class="point__destination-wrap">
                 <label class="point__destination-label" for="destination">${TYPE[this._type][1]}</label>
-                <input class="point__destination-input" list="destination-select" id="destination" value="${this._title
-}" name="destination">
+                <input class="point__destination-input" list="destination-select" id="destination" value="${this._title}" name="destination">
                 <datalist id="destination-select">
-                  <option value="airport"></option>
-                  <option value="Geneva"></option>
-                  <option value="Chamonix"></option>
-                  <option value="hotel"></option>
+                ${destinationsList.map(getDestination).join(``)}
                 </datalist>
               </div>
 
@@ -191,25 +248,7 @@ export class PointEdit extends Component {
                 <h3 class="point__details-title">offers</h3>
 
                 <div class="point__offers-wrap">
-                  <input class="point__offers-input visually-hidden" type="checkbox" id="add-luggage" name="offer" value="add-luggage">
-                  <label for="add-luggage" class="point__offers-label">
-                    <span class="point__offer-service">Add luggage</span> + €<span class="point__offer-price">30</span>
-                  </label>
-
-                  <input class="point__offers-input visually-hidden" type="checkbox" id="switch-to-comfort-class" name="offer" value="switch-to-comfort-class">
-                  <label for="switch-to-comfort-class" class="point__offers-label">
-                    <span class="point__offer-service">Switch to comfort class</span> + €<span class="point__offer-price">100</span>
-                  </label>
-
-                  <input class="point__offers-input visually-hidden" type="checkbox" id="add-meal" name="offer" value="add-meal">
-                  <label for="add-meal" class="point__offers-label">
-                    <span class="point__offer-service">Add meal </span> + €<span class="point__offer-price">15</span>
-                  </label>
-
-                  <input class="point__offers-input visually-hidden" type="checkbox" id="choose-seats" name="offer" value="choose-seats">
-                  <label for="choose-seats" class="point__offers-label">
-                    <span class="point__offer-service">Choose seats</span> + €<span class="point__offer-price">5</span>
-                  </label>
+                ${offersList.map((offer) => getOffers(offer, this._type)).join(``)}
                 </div>
 
               </section>
@@ -238,26 +277,7 @@ export class PointEdit extends Component {
     this._element
       .querySelector(`.point__form`)
       .addEventListener(`reset`, this._onDeleteClick);
-
-    flatpickr(`.point__input--day`, {
-      altInput: true,
-      altFormat: `j F`,
-      dateFormat: `j F`
-    });
-    flatpickr(`.point__input--start`, {
-      enableTime: true,
-      noCalendar: true,
-      altInput: true,
-      altFormat: `h:i K`,
-      dateFormat: `h:i K`
-    });
-    flatpickr(`.point__input--end`, {
-      enableTime: true,
-      noCalendar: true,
-      altInput: true,
-      altFormat: `h:i K`,
-      dateFormat: `h:i K`
-    });
+    this._initFlatPickr();
   }
 
   unbind() {
@@ -276,6 +296,12 @@ export class PointEdit extends Component {
   static createMapper(target) {
     return {
       price: (value) => (target.price = value)
+      /* [`travel-way`]: (value) => target.travelWay = value,
+      destination: (value) => target.destination = value,
+      time: (value) => target.time = value,
+      price: (value) => target.price = value,
+      offer: (value) => target.offers.add(value),
+      favorite: (value) => target.isFavorite = value */
     };
   }
 }
