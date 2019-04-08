@@ -74,6 +74,9 @@ const renderPoints = (items) => {
 
     pointEditComponent.onSubmit = (newObject) => {
       point.price = newObject.price;
+      point.title = newObject.title;
+      point.dateStart = newObject.dateStart;
+      point.dateEnd = newObject.dateEnd;
 
       pointComponent.update(point);
       pointComponent.render();

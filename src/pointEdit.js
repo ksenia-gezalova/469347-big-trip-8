@@ -109,14 +109,19 @@ export class PointEdit extends Component {
   _processForm(formData) {
     const entry = {
       price: ``,
-      place: ``
+      title: ``,
+      dateStart: ``,
+      dateEnd: ``,
+      type: ``,
+      favorite: false,
+
     };
 
     const pointEditMapper = PointEdit.createMapper(entry);
 
     for (const pair of formData.entries()) {
       const [property, value] = pair;
-      // console.log(pair);
+      console.log(pair);
       // eslint-disable-next-line no-unused-expressions
       pointEditMapper[property] && pointEditMapper[property](value);
     }
@@ -157,17 +162,17 @@ export class PointEdit extends Component {
     });
     flatpickr(this._element.querySelector(`.point__input--start`), {
       enableTime: true,
-      noCalendar: true,
+      noCalendar: false,
       altInput: true,
-      altFormat: `h:i K`,
-      dateFormat: `h:i K`,
+      altFormat: `h:i`,
+      dateFormat: `h:i`,
     });
     flatpickr(this._element.querySelector(`.point__input--end`), {
       enableTime: true,
-      noCalendar: true,
+      noCalendar: false,
       altInput: true,
-      altFormat: `h:i K`,
-      dateFormat: `h:i K`
+      altFormat: `h:i`,
+      dateFormat: `h:i`
     });
   }
 
@@ -290,18 +295,19 @@ export class PointEdit extends Component {
   }
 
   update(data) {
+    console.log(data);
     this._price = data.price;
+    this._title = data.title;
+    this._dateStart = data.dateStart;
+    this._dateEnd = data.dateEnd;
   }
 
   static createMapper(target) {
     return {
-      price: (value) => (target.price = value)
-      /* [`travel-way`]: (value) => target.travelWay = value,
-      destination: (value) => target.destination = value,
-      time: (value) => target.time = value,
-      price: (value) => target.price = value,
-      offer: (value) => target.offers.add(value),
-      favorite: (value) => target.isFavorite = value */
+      'price': (value) => (target.price = value),
+      'destination': (value) => (target.title = value),
+      'date-start': (value) => (target.dateStart = value),
+      'date-end': (value) => (target.dateEnd = value)
     };
   }
 }
